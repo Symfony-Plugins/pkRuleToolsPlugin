@@ -1,0 +1,43 @@
+= pkRuleTools =
+
+Handy tools for matching paths with simple rules in configuration
+files and the like. We use it in pkContextCMSPlugin to assign templates
+to newly created pages. Perhaps you'll find it useful as well.
+
+== Usage ==
+
+ Simple path-matching rules. They work like this:
+ * matches anything
+ % matches anything except / (great for directory components)
+  
+Call pkRuleTools::select() with an array of rules and a string to be matched. 
+Each rule is an associative array with a key named 'rule' that contains
+the actual pattern. select returns the entire associative array
+for the first matching rule, or false if no rules match. This means that
+you can store your own information in the other keys of the array.
+
+This is very handy in CMS configuration files. Example
+(for a CMS with rooted paths):
+
+      template_rules: 
+
+        # Home page gets homePage
+
+        - rule: "/"
+          template: homePage
+        
+        # All second level pages get secondPage
+        
+        - rule: "/%/%"
+          template: secondPage
+        
+        # All descendants (not just direct children) of /faq/ get faqPage.
+        # For direct children only, use % instead of *
+
+        - rule: "/home/faq/*"
+          template: faqPage
+        
+        Everything else gets simplePage
+        - rule: "*"
+          template: simplePage
+
